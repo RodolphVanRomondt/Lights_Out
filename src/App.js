@@ -6,9 +6,10 @@ import "./App.css";
 
 function App() {
   return (
-      <div className="App">
-        <Board />
-      </div>
+    <div className="App">
+      <h1>Lights Out</h1>
+      <Board nrows={3} ncols={3}/>
+    </div>
   );
 }
 
