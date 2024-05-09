@@ -27,7 +27,7 @@ import "./Board.css";
  *
  **/
 
-function Board({ nrows, ncols, chanceLightStartsOn }) {
+function Board({ nrows=4, ncols=4, chanceLightStartsOn=.25 }) {
   const [board, setBoard] = useState(createBoard());
 
   /** create a board nrows high/ncols wide, each cell randomly lit or unlit */
@@ -38,15 +38,16 @@ function Board({ nrows, ncols, chanceLightStartsOn }) {
     // TODO: create array-of-arrays of true/false values
     for (let i = 0; i < nrows; i++) {
       initialBoard.push(Array.from({ length: ncols },
-        () => Math.floor(Math.random() * 2)
+        () => Math.random() < chanceLightStartsOn
       ));
     }
-    
+
     return initialBoard;
   }
 
   function hasWon() {
     // TODO: check the board in state to determine whether the player has won.
+    return board.every(row => row.every(cell => cell != 0));
   }
 
   function flipCellsAround(coord) {
@@ -62,16 +63,25 @@ function Board({ nrows, ncols, chanceLightStartsOn }) {
       };
 
       // TODO: Make a (deep) copy of the oldBoard
+      const newBoard = JSON.parse(JSON.stringify(oldBoard));
 
       // TODO: in the copy, flip this cell and the cells around it
-
+      flipCell(y, x, newBoard);
+      flipCell(y, x - 1, newBoard);
+      flipCell(y, x + 1, newBoard);
+      flipCell(y - 1, x, newBoard);
+      flipCell(y + 1, x, newBoard);
+      
       // TODO: return the copy
+      return newBoard;
     });
   }
 
   // if the game is won, just show a winning msg & render nothing else
+  if (hasWon()) {
+    return <div>You Won!</div>
+  }
 
-  // TODO
 
   // make table board
   return (
@@ -80,10 +90,11 @@ function Board({ nrows, ncols, chanceLightStartsOn }) {
         <thead></thead>
         <tbody>
           {board.map((row, rIdx) => <tr key={rIdx}>
-            {row.map((cell, cIdx) => (
-              <Cell isLit={cell} key={cIdx}/>
-            ))}
-          </tr>)};
+            {row.map((cell, cIdx) => {
+              let coord = `${rIdx}-${cIdx}`;
+              return <Cell flipCellsAroundMe={e => flipCellsAround(coord)} isLit={cell} key={coord} />
+            })}
+          </tr>)}
         </tbody>
       </table>
     </div>
