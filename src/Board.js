@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Cell from "./Cell";
 import "./Board.css";
 
+
 /** Game board of Lights out.
  *
  * Properties:
@@ -47,7 +48,7 @@ function Board({ nrows=4, ncols=4, chanceLightStartsOn=.25 }) {
 
   function hasWon() {
     // TODO: check the board in state to determine whether the player has won.
-    return board.every(row => row.every(cell => cell != 0));
+    return board.every(row => row.every(cell => cell));
   }
 
   function flipCellsAround(coord) {
@@ -56,7 +57,6 @@ function Board({ nrows=4, ncols=4, chanceLightStartsOn=.25 }) {
 
       const flipCell = (y, x, boardCopy) => {
         // if this coord is actually on board, flip it
-
         if (x >= 0 && x < ncols && y >= 0 && y < nrows) {
           boardCopy[y][x] = !boardCopy[y][x];
         }
@@ -79,9 +79,12 @@ function Board({ nrows=4, ncols=4, chanceLightStartsOn=.25 }) {
 
   // if the game is won, just show a winning msg & render nothing else
   if (hasWon()) {
-    return <div>You Won!</div>
+    return (
+      <div>
+        <h2>You Won!</h2>
+      </div>
+    )
   }
-
 
   // make table board
   return (
@@ -100,5 +103,6 @@ function Board({ nrows=4, ncols=4, chanceLightStartsOn=.25 }) {
     </div>
   )
 }
+
 
 export default Board;
